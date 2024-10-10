@@ -28,23 +28,23 @@ export class AuthService {
     }
 
     async login(@Body() loginDto: LoginDto) {
-        const user = this.prisma.users.findUnique({
-            where: { email: loginDto.email }
+        const user = await this.prisma.users.findUnique({
+            where: { email: loginDto.email },
         });
 
         if (!user) {
-            throw new UnauthorizedException('Invalid Credentials!')
+            throw new UnauthorizedException('Invalid Credentials!');
         }
 
-        const isPasswordValid = await bcrypt.compare(loginDto.password, (await user).password);
+        const isPasswordValid = await bcrypt.compare(loginDto.password, user.password);
 
         if (!isPasswordValid) {
-            throw new UnauthorizedException('Invalid Credentials!')
+            throw new UnauthorizedException('Invalid Credentials!');
         }
 
-        // Generate JWT
-        const payload = { email: (await user).email, sub: (await user).user_id };
-        return { access_token: this.jwtService.sign(payload) }
+        // Generate JWT payload
+        const payload = { email: user.email, sub: user.user_id, role: user.role };
+        return { auth_token: this.jwtService.sign(payload) };
     }
 
 }
