@@ -16,12 +16,17 @@ async function bootstrap() {
         scheme: 'bearer',
         bearerFormat: 'JWT',
       },
-      'access-token')
+      'access-token',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document); // Swagger UI will be available at /api
 
-  await app.listen(3000);
+  // Listen on dynamic port or default to 3000
+  const port = process.env.PORT || 3000;
+  await app.listen(port);
+  console.log(`Application is running on: ${await app.getUrl()}`);
 }
+
 bootstrap();
