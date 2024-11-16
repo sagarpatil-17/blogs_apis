@@ -1,21 +1,37 @@
-import { Controller, Get, SetMetadata, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, SetMetadata, UseGuards } from "@nestjs/common";
 import { BlogsService } from "./blogs.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
-import { RoleGuard } from "src/guards/role.guard";
+import { CreateBlogDto } from "./dto/createBlog.dto";
 
-@Controller('blogs')
-@ApiTags('Blogs controller')
+@ApiTags('BlogsController')
+@Controller('blog')
 export class BlogsController {
 
     constructor(private readonly blogService: BlogsService) { }
 
-    @UseGuards(JwtAuthGuard,RoleGuard)
-    @ApiBearerAuth('access-token')
     @Get()
     async getBlogs() {
-        return this.blogService.getBlogs();
+        return await this.blogService.getBlogs();
     }
 
+    @Get(':tag')
+    async getBlogsByTags(@Param('tag') tag: string) {
+        return await this.blogService.getBlogsByTags(tag);
+    }
+
+    @Get('detail/:blog_id')
+    async getBlogDetail(@Param('blog_id') blog_id: string) {
+        return await this.blogService.getBlogDetail(blog_id);
+    }
+
+    @Post('create')
+    async createBlogs(@Body() dto: CreateBlogDto) {
+        return await this.blogService.createBlogs(dto);
+    }
+
+    @Get('search/:searchedText')
+    async searchBlogs(@Param('searchedText') searchedText: string) {
+        return await this.blogService.searchBlogs(searchedText);
+    }
 
 }
