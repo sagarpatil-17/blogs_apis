@@ -14,27 +14,24 @@ datasource db {
 }
 
 model users {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  username  String
-  email     String   @unique
-  password  String
-  user_id   String   @unique
-  role      String
-  blogs     blogDetails[] @relation("UserBlogs")
+  id       String        @id @default(auto()) @map("_id") @db.ObjectId
+  username String
+  email    String        @unique
+  password String
+  role     String
+  blogs    blogDetails[] @relation("UserBlogs")
 
   @@map("blogs_users")
 }
 
 model blogDetails {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  tags       String[]
-  createdBy  String
-  createdAt  DateTime @default(now())
-  details    String
-  title      String
-  author     users    @relation("UserBlogs", fields: [createdBy], references: [user_id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  tags      String[]
+  createdBy String  
+  createdAt DateTime @default(now())
+  details   String
+  title     String
+  author    users    @relation("UserBlogs", fields: [createdBy], references: [id])
 
   @@map("blogs_details")
 }
-
-

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, SetMetadata, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, SetMetadata, UseGuards } from "@nestjs/common";
 import { BlogsService } from "./blogs.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CreateBlogDto } from "./dto/createBlog.dto";

@@ -18,7 +18,6 @@ export class AuthService {
                     username: signUpDto.username,
                     email: signUpDto.email,
                     password: hashedPassword,
-                    user_id: '1',
                     role: '2'
                 }
             })
@@ -43,7 +42,7 @@ export class AuthService {
         }
 
         // Generate JWT payload
-        const payload = { email: user.email, sub: user.user_id, role: user.role };
+        const payload = { email: user.email, sub: user.id, role: user.role };
         return { auth_token: this.jwtService.sign(payload) };
     }
 
