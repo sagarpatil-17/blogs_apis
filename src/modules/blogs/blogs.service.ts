@@ -18,30 +18,30 @@ export class BlogsService {
         const [featured_blogs, latest_blogs, frontend_blogs, backend_blogs, fullstack_blogs] = await this.prisma.$transaction([
             this.prisma.blogDetails.findMany({
                 where: { tags: { has: 'featured' } },
-                include: { author: { select: { username: true } } },
+                include: { author: true },
                 take: 2,
                 orderBy: { createdAt: 'desc' }
             }),
             this.prisma.blogDetails.findMany({
-                include: { author: { select: { username: true } } },
+                include: { author: true },
                 take: 3,
                 orderBy: { createdAt: 'desc' }
             }),
             this.prisma.blogDetails.findMany({
                 where: { tags: { has: 'frontend' } },
-                include: { author: { select: { username: true } } },
+                include: { author: true },
                 take: 3,
                 orderBy: { createdAt: 'desc' }
             }),
             this.prisma.blogDetails.findMany({
                 where: { tags: { has: 'backend' } },
-                include: { author: { select: { username: true } } },
+                include: { author: true },
                 take: 3,
                 orderBy: { createdAt: 'desc' }
             }),
             this.prisma.blogDetails.findMany({
                 where: { tags: { has: 'fullstack' } },
-                include: { author: { select: { username: true } } },
+                include: { author: true },
                 take: 3,
                 orderBy: { createdAt: 'desc' }
             })
@@ -60,14 +60,15 @@ export class BlogsService {
         let blogs = undefined;
 
         if (tag == 'latest') {
-            blogs = await this.prisma.blogDetails.findMany();
+            blogs = await this.prisma.blogDetails.findMany({
+                include: { author: true }
+            });
         } else {
             blogs = await this.prisma.blogDetails.findMany({
                 where: {
-                    tags: {
-                        has: tag
-                    }
-                }
+                    tags: { has: tag }
+                },
+                include: { author: true }
             });
         }
 
@@ -79,13 +80,7 @@ export class BlogsService {
     async getBlogDetail(blog_id: string) {
         const blogDetail = await this.prisma.blogDetails.findUnique({
             where: { id: blog_id },
-            include: {
-                author: {
-                    select: {
-                        username: true
-                    }
-                }
-            }
+            include: { author: true }
         });
 
         if (!blogDetail) {
@@ -107,11 +102,12 @@ export class BlogsService {
     async searchBlogs(searchedText: string) {
         const blogs = await this.prisma.blogDetails.findMany({
             where: { title: { contains: searchedText, mode: 'insensitive' } },
-            include: { author: { select: { username: true } } }
+            include: { author: true }
         })
 
         return blogs.map(blog => {
             return { ...blog, image: this.randomImg() }
         })
     }
+
 }
