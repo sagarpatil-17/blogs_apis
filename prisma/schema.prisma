@@ -19,6 +19,7 @@ model users {
   email    String        @unique
   password String
   role     String
+  userId   Int           @unique
   blogs    blogDetails[] @relation("UserBlogs")
 
   @@map("blogs_users")
@@ -27,11 +28,11 @@ model users {
 model blogDetails {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   tags      String[]
-  createdBy String
+  createdBy Int
   createdAt DateTime @default(now())
   details   String
   title     String
-  author    users    @relation("UserBlogs", fields: [createdBy], references: [id])
+  author    users    @relation("UserBlogs", fields: [createdBy], references: [userId])
 
   @@map("blogs_details")
 }
