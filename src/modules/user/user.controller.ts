@@ -19,9 +19,9 @@ export class UserController {
         return await this.userService.updateUserProfile(userId, dto);
     }
 
-    @Get('blogs/my')
-    async getMyBlogs() {
-        return await this.userService.getMyBlogs();
+    @Get('blogs/:userId')
+    async getMyBlogs(@Param('userId') userId: string) {
+        return await this.userService.getMyBlogs(userId);
     }
 
 }
