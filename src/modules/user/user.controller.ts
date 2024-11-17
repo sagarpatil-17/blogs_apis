@@ -20,8 +20,8 @@ export class UserController {
     }
 
     @Get('blogs/:userId')
-    async getMyBlogs(@Param('userId') userId: string) {
-        return await this.userService.getMyBlogs(userId);
+    async getMyBlogs(@Param('userId') userId: number) {
+        return await this.userService.getMyBlogs(+userId);
     }
 
 }

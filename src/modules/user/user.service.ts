@@ -35,7 +35,7 @@ export class UserService {
         });
     }
 
-    async getMyBlogs(userId: string) {
+    async getMyBlogs(userId: number) {
         const blogs = await this.prisma.blogDetails.findMany({
             where: { createdBy: userId },
             include: { author: true },

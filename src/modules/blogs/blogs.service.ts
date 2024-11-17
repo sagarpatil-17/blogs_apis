@@ -94,7 +94,7 @@ export class BlogsService {
         return await this.prisma.blogDetails.create({
             data: {
                 ...dto,
-                createdBy: '1'
+                createdBy: 1
             }
         });
     }
