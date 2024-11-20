@@ -32,7 +32,7 @@ model blogDetails {
   createdAt DateTime @default(now())
   details   String
   title     String
-  author    users    @relation("UserBlogs", fields: [createdBy], references: [userId])
+  author    users?    @relation("UserBlogs", fields: [createdBy], references: [userId])
 
   @@map("blogs_details")
 }
