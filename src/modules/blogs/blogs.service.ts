@@ -90,11 +90,11 @@ export class BlogsService {
         return { ...blogDetail, image: this.randomImg() }
     }
 
-    async createBlogs(dto: CreateBlogDto) {
+    async createBlogs(dto: CreateBlogDto,req) {
         return await this.prisma.blogDetails.create({
             data: {
                 ...dto,
-                createdBy: 1
+                createdBy: req.userId
             }
         });
     }

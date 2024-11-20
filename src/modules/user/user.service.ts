@@ -23,14 +23,18 @@ export class UserService {
     }
 
     async updateUserProfile(userId: string, dto: UserDto) {
-        const hashedPassword = await bcrypt.hash(dto.password, 10);
+        let hashedPassword: string | undefined;
+
+        if (dto.password) {
+            hashedPassword = await bcrypt.hash(dto.password, 10);
+        }
 
         return await this.prisma.users.update({
             where: { id: userId },
             data: {
                 username: dto.username,
                 email: dto.email,
-                password: hashedPassword
+                ...(hashedPassword ? { password: hashedPassword } : {})
             }
         });
     }

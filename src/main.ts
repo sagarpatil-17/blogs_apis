@@ -6,17 +6,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({ origin: '*' });
+  app.setGlobalPrefix('api');
 
   // Swagger setup
   const config = new DocumentBuilder()
     .setTitle('Blogs Apis')
     .setDescription('API documentation')
     .setVersion('1.0')
-    .addBearerAuth({
-      type: 'http',
-      scheme: 'bearer',
-      bearerFormat: 'JWT',
-    }, 'access-token')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

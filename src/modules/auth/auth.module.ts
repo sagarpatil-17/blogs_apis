@@ -14,10 +14,9 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
                 secret: configService.getOrThrow('JWT_SECRET_KEY'),
-
                 signOptions: { expiresIn: '1hr' }
-            })
-        })
+            }),
+        }),
     ],
     controllers: [AuthController],
     providers: [AuthService, PrismaService],

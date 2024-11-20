@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UserService } from "./user.service";
 import { UserDto } from "./dto/user.dto";
+import { AUTH } from "src/guards/auth.decorator";
+import { Role } from "src/globals/role.enum";
 
 @ApiTags('UserController')
 @Controller('user')
@@ -19,6 +21,7 @@ export class UserController {
         return await this.userService.updateUserProfile(userId, dto);
     }
 
+    @AUTH(Role.Admin)
     @Get('blogs/:userId')
     async getMyBlogs(@Param('userId') userId: number) {
         return await this.userService.getMyBlogs(+userId);

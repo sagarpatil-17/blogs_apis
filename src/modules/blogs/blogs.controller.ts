@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Patch, Post, SetMetadata, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Req, SetMetadata, UseGuards } from "@nestjs/common";
 import { BlogsService } from "./blogs.service";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { CreateBlogDto } from "./dto/createBlog.dto";
+import { AUTH } from "src/guards/auth.decorator";
+import { Role } from "src/globals/role.enum";
 
 @ApiTags('BlogsController')
 @Controller('blog')
@@ -24,9 +26,10 @@ export class BlogsController {
         return await this.blogService.getBlogDetail(blog_id);
     }
 
+    @AUTH(Role.Admin, Role.User)
     @Post('create')
-    async createBlogs(@Body() dto: CreateBlogDto) {
-        return await this.blogService.createBlogs(dto);
+    async createBlogs(@Body() dto: CreateBlogDto, @Req() req: any) {
+        return await this.blogService.createBlogs(dto, req.user);
     }
 
     @Get('search/:searchedText')
