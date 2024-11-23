@@ -43,6 +43,7 @@ export class UserService {
         const blogs = await this.prisma.blogDetails.findMany({
             where: { createdBy: userId },
             include: { author: true },
+            orderBy: { createdAt: 'desc' }
         });
 
         return blogs.map(blog => {

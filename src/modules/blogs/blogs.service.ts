@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma-service/prisma.service";
 import { CreateBlogDto } from "./dto/createBlog.dto";
+import { UpdateBlogDto } from "./dto/updateBlog.dto";
 
 @Injectable()
 export class BlogsService {
@@ -90,13 +91,28 @@ export class BlogsService {
         return { ...blogDetail, image: this.randomImg() }
     }
 
-    async createBlogs(dto: CreateBlogDto,req) {
+    async createBlogs(dto: CreateBlogDto, req) {
         return await this.prisma.blogDetails.create({
             data: {
                 ...dto,
                 createdBy: req.userId
             }
         });
+    }
+
+    async updateBlogs(blogId: string, dto: UpdateBlogDto) {
+        return await this.prisma.blogDetails.update({
+            where: { id: blogId },
+            data: {
+                ...dto,
+            }
+        })
+    }
+
+    async deleteBlog(blogId: string) {
+        return await this.prisma.blogDetails.delete({
+            where: { id: blogId }
+        })
     }
 
     async searchBlogs(searchedText: string) {
