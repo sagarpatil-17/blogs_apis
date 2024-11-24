@@ -2,10 +2,29 @@ import { Module } from '@nestjs/common';
 import { AuthModule } from './modules/auth/auth.module';
 import { BlogsModule } from './modules/blogs/blogs.module';
 import { UserModule } from './modules/user/user.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
-  imports: [AuthModule, BlogsModule, UserModule, ConfigModule.forRoot({ isGlobal: true })],
+  imports: [
+    AuthModule,
+    BlogsModule,
+    UserModule,
+    MailerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        transport: {
+          host: config.getOrThrow('SMTP_HOST'),
+          port: config.getOrThrow<number>('SMTP_PORT'),
+          secure: false,
+          auth: {
+            user: config.getOrThrow('SMTP_AUTH_USER'),
+            pass: config.getOrThrow('SMTP_AUTH_PASS'),
+          },
+        },
+      }),
+    }),
+    ConfigModule.forRoot({ isGlobal: true })],
   providers: [],
 })
 export class AppModule { }
