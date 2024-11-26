@@ -19,3 +19,11 @@ export class UserDto {
     @IsOptional()
     password: string;
 }
+
+export class SubscribeDto {
+    @ApiProperty()
+    @IsEmail({}, { message: 'Email must be a valid email address' })
+    @IsNotEmpty()
+    @IsOptional()
+    email: string;
+}

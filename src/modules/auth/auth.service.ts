@@ -1,6 +1,6 @@
 import { Body, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/prisma-service/prisma.service";
-import { ForgotPasswordDto, LoginDto, SignUpDto } from "./dto/auth.dto";
+import { ForgotPasswordDto, LoginDto, ResetPasswordDto, SignUpDto } from "./dto/auth.dto";
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import { JwtService } from "@nestjs/jwt";
@@ -65,12 +65,12 @@ export class AuthService {
         const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // OTP valid for 5 minutes
 
         // Create or update the forgot password record in the database
-        // await this.prisma.forgotPassword.create({
-        //     data: {
-        //         email: dto.email,
-        //         otp: +otp
-        //     }
-        // });
+        await this.prisma.forgotPassword.create({
+            data: {
+                email: dto.email,
+                otp: +otp
+            }
+        });
 
         await this.mail.sendMail({
             subject: 'Your OTP Code',
@@ -79,8 +79,35 @@ export class AuthService {
             from: 'Code plus codeplus26@gmail.com'
         });
 
-        return "OTP sent successfully!"
+        return { message: "OTP sent successfully!" }
 
+    }
+
+    async verifyPassword(dto: ForgotPasswordDto) {
+        const user = await this.prisma.forgotPassword.findUnique({
+            where: { email: dto.email }
+        });
+
+        if (user.otp != Number(dto.otp)) {
+            throw new Error('Invalid OTP. Please try again.');
+        }
+
+        await this.prisma.forgotPassword.delete({
+            where: { email: dto.email },
+        });
+
+        return { message: 'OTP verified successfully!' };
+    }
+
+    async resetPassword(dto: ResetPasswordDto) {
+        const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+        await this.prisma.users.update({
+            where: { email: dto.email },
+            data: { password: hashedPassword }
+        })
+
+        return { message: 'Success!, You can login now' }
     }
 
 }

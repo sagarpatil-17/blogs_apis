@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma-service/prisma.service";
-import { UserDto } from "./dto/user.dto";
+import { SubscribeDto, UserDto } from "./dto/user.dto";
 import * as bcrypt from 'bcrypt';
 import { ObjectId } from "mongodb";
 
@@ -49,6 +49,14 @@ export class UserService {
         return blogs.map(blog => {
             return { ...blog, image: this.randomImg() }
         });
+    }
+
+    async addSubscribers(dto: SubscribeDto) {
+        await this.prisma.subscribers.create({
+            data: { email: dto.email }
+        })
+
+        return { message: 'Thank you for subscribing!' }
     }
 
 }
