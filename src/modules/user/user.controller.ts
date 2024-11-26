@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UserService } from "./user.service";
-import { UserDto } from "./dto/user.dto";
+import { SubscribeDto, UserDto } from "./dto/user.dto";
 import { AUTH } from "src/guards/auth.decorator";
 import { Role } from "src/globals/role.enum";
 
@@ -25,6 +25,11 @@ export class UserController {
     @Get('blogs/:userId')
     async getMyBlogs(@Param('userId') userId: number) {
         return await this.userService.getMyBlogs(+userId);
+    }
+
+    @Post('/subscribe')
+    async addSubscribers(@Body() dto: SubscribeDto) {
+        return await this.userService.addSubscribers(dto);
     }
 
 }

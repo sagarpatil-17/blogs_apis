@@ -18,7 +18,7 @@ export class SignUpDto {
     password: string;
 }
 
-export class LoginDto{
+export class LoginDto {
     @ApiProperty()
     @IsEmail({}, { message: 'Email must be a valid email address' })
     @IsNotEmpty()
@@ -30,7 +30,7 @@ export class LoginDto{
     password: string;
 }
 
-export class ForgotPasswordDto{
+export class ForgotPasswordDto {
     @ApiProperty()
     @IsEmail({}, { message: 'Email must be a valid email address' })
     @IsNotEmpty()
@@ -40,4 +40,16 @@ export class ForgotPasswordDto{
     @IsNumber()
     @IsOptional()
     otp: number;
+}
+
+export class ResetPasswordDto {
+    @ApiProperty()
+    @IsEmail({}, { message: 'Email must be a valid email address' })
+    @IsNotEmpty()
+    email: string;
+
+    @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    password: string;
 }

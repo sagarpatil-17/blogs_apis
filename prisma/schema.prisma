@@ -27,7 +27,7 @@ model users {
 
 model forgotPassword {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
-  email String
+  email String @unique
   otp   Int
 
   @@map("forgot_password")
@@ -43,4 +43,9 @@ model blogDetails {
   author    users?   @relation("UserBlogs", fields: [createdBy], references: [userId])
 
   @@map("blogs_details")
+}
+
+model subscribers {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  email String @unique
 }
