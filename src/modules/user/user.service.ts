@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/prisma-service/prisma.service";
 import { SubscribeDto, UserDto } from "./dto/user.dto";
 import * as bcrypt from 'bcrypt';
@@ -51,12 +51,21 @@ export class UserService {
         });
     }
 
-    async addSubscribers(dto: SubscribeDto) {
-        await this.prisma.subscribers.create({
-            data: { email: dto.email }
-        })
 
-        return { message: 'Thank you for subscribing!' }
+    async addSubscribers(dto: SubscribeDto) {
+        const existingSubscriber = await this.prisma.subscribers.findUnique({
+            where: { email: dto.email },
+        });
+
+        if (existingSubscriber) {
+            throw new BadRequestException('Email ID already exists!');
+        }
+
+        await this.prisma.subscribers.create({
+            data: { email: dto.email },
+        });
+
+        return { message: 'Thank you for subscribing!' };
     }
 
 }
