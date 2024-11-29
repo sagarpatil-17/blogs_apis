@@ -4,12 +4,16 @@ import { BlogsModule } from './modules/blogs/blogs.module';
 import { UserModule } from './modules/user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { CronModule } from './tasks/cron.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     AuthModule,
     BlogsModule,
     UserModule,
+    CronModule,
+    ScheduleModule.forRoot(),
     MailerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

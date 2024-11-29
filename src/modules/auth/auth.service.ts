@@ -1,4 +1,4 @@
-import { Body, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Body, Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "src/prisma-service/prisma.service";
 import { ForgotPasswordDto, LoginDto, ResetPasswordDto, SignUpDto } from "./dto/auth.dto";
 import * as bcrypt from 'bcrypt';
@@ -57,7 +57,7 @@ export class AuthService {
         });
 
         if (!user) {
-            throw new Error('Email not found');
+            throw new BadRequestException('Email not found!');
         }
 
         // Generate a 4-digit OTP and set its expiration time
@@ -68,7 +68,8 @@ export class AuthService {
         await this.prisma.forgotPassword.create({
             data: {
                 email: dto.email,
-                otp: +otp
+                otp: +otp,
+                expiresAt
             }
         });
 
