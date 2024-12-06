@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { CronModule } from './tasks/cron.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     BlogsModule,
     UserModule,
     CronModule,
+    DashboardModule,
     ScheduleModule.forRoot(),
     MailerModule.forRootAsync({
       inject: [ConfigService],
