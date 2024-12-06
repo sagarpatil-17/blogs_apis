@@ -7,7 +7,7 @@ export class DashboardService {
     constructor(private readonly prisma: PrismaService) { }
 
     async getDashboardDetails() {
-        const [web, frontend, backend, fullstack] = await this.prisma.$transaction([
+        const [web, frontend, backend, fullstack, total] = await this.prisma.$transaction([
             this.prisma.blogDetails.count({
                 where: { tags: { has: 'web' } }
             }),
@@ -19,14 +19,18 @@ export class DashboardService {
             }),
             this.prisma.blogDetails.count({
                 where: { tags: { has: 'fullstack' } }
-            })
+            }),
+            this.prisma.blogDetails.count()
         ]);
 
+        const other = total - (web + frontend + backend + fullstack);
+
         return [
-            { type: 'web', count: web },
-            { type: 'frontend', count: frontend },
-            { type: 'backend', count: backend },
-            { type: 'fullstack', count: fullstack },
+            { type: 'Web', count: web },
+            { type: 'Frontend', count: frontend },
+            { type: 'Backend', count: backend },
+            { type: 'Fullstack', count: fullstack },
+            { type: 'Other', count: other },
         ]
     }
 
