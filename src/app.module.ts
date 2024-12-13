@@ -7,9 +7,11 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { CronModule } from './tasks/cron.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { TestModule } from './modules/test/test.module';
 
 @Module({
   imports: [
+    TestModule,
     AuthModule,
     BlogsModule,
     UserModule,
